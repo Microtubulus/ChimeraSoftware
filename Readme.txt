@@ -15,3 +15,4 @@ SETUP_preADCgain = 1.235
 
 ISSUES:
 - The User Interface is not adjusted for different screen sizes!!
+- Zero Voltage button does not work properly. As a workaround, you can use the scroll wheel in the voltage offset field to adjust the offset.
