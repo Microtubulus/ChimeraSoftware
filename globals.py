@@ -6,9 +6,9 @@ def init():
     global freqComp
     freqComp = 19
     global SETUP_pAoffset
-    SETUP_pAoffset = 1.6E-9
+    SETUP_pAoffset = 1365e-12
     global SETUP_TIAgain
-    SETUP_TIAgain = 100E6
+    SETUP_TIAgain = 100e6
     global SETUP_preADCgain
     SETUP_preADCgain = 1.235
     #
@@ -29,7 +29,7 @@ def init():
     global myCfast
     myCfast=11E-12
     global myvoltageoffset
-    myvoltageoffset=-218.1E-3
+    myvoltageoffset=-274E-3
     global IVUseAlternatingV
     IVUseAlternatingV=1
     global AllVoltages
@@ -262,7 +262,7 @@ def init():
     global displaysubsample
     displaysubsample = 16
     global displaybuffersize
-    displaybuffersize = ADCnumsignals*ADCSAMPLERATE*displaybuffertime/displaysubsample
+    displaybuffersize = int(np.ceil(ADCnumsignals*ADCSAMPLERATE*displaybuffertime/displaysubsample))
     global displaybuffer
     displaybuffer = np.zeros(displaybuffersize, dtype=np.float)
     global flag

@@ -84,7 +84,7 @@ def CHIMERA_updateDACvalues1(xem):
     import numpy as np
     import math
     Cfastvalue = globals.CFAST_CAP0
-    #Cfastvalue = globals.CFAST_CAP0+globals.CFAST_CAP1 for extended range
+    #Cfastvalue = globals.CFAST_CAP0+globals.CFAST_CAP1 #for extended range
     newCfastDACvoltage = - globals.newbiasvalue * globals.myCfast / (globals.CFAST_gain*Cfastvalue)
     biasDACcode = np.uint16((-globals.newbiasvalue-globals.myvoltageoffset+0.5*globals.DACFULLSCALE)/globals.DACFULLSCALE*(math.pow(2, globals.DACBITS)))
     fastcDACcode = np.uint16((-newCfastDACvoltage+0.5*globals.DACFULLSCALE)/globals.DACFULLSCALE * (math.pow(2, globals.DACBITS)))
@@ -180,7 +180,7 @@ def PlotValues(cutoff):
     g.currentRMSRaw = np.std(readvalues)
 
     if cutoff==0:
-        g.displaybuffer = si.resample(readvalues, 1/g.displaysubsample*len(readvalues))
+        g.displaybuffer = si.resample(readvalues, int(1/g.displaysubsample*len(readvalues)))
     else:
         downsampled = si.resample(readvalues, 1/g.displaysubsample*len(readvalues))
         effsamplerate=(g.ADCSAMPLERATE/g.displaysubsample)
@@ -260,7 +260,7 @@ def ConvertRaw(data, headers, outputsamplerate, LPfiltercutoff):
     return out
 
 def InitializeChimera(xem):
-    from PyQt4 import QtGui  # (the example applies equally well to PySide)
+    from PyQt5 import QtGui  # (the example applies equally well to PySide)
     import pyqtgraph as pg
     import ok
     import sys

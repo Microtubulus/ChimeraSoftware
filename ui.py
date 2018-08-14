@@ -1,4 +1,4 @@
-from PyQt4.QtGui import QApplication, QMainWindow
+from PyQt5.QtGui import *
 from ui2 import Ui_mainWindow
 import pyqtgraph as pg
 import ok
@@ -12,26 +12,29 @@ import numpy as np
 import functions
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from matplotlib.ticker import EngFormatter
 from pyqtgraph.Qt import QtGui, QtCore
 from pyqtgraph import exporters
 from tables import *
 import tables
 from scipy import io
 from scipy import signal as si
-import IVGeneratorApp
 
 #   Draw UI
-app = QApplication(sys.argv)
-window = QMainWindow()
+app = QtGui.QApplication(sys.argv)
+window = QtGui.QMainWindow()
 ui = Ui_mainWindow()
 ui.setupUi(window)
 
 #   Initialize Chimera and Set Values
+AmpForm=EngFormatter(unit='A',places=3)
+VoltForm=EngFormatter(unit='V',places=3)
+
 g.init()
 xem = ok.FrontPanel()
 functions.InitializeChimera(xem)
 ui.zerovoltagevlaue.setValue(g.myvoltageoffset)
-ui.ZeroCurrentValue.setText(str(g.SETUP_pAoffset))
+ui.ZeroCurrentValue.setText(AmpForm.format_data(g.SETUP_pAoffset))
 ui.IVBounds.setValue(g.HigherIV)
 ui.IVStep.setValue(g.StepIV)
 ui.IVDwell.setValue(g.timeIV)
@@ -150,7 +153,7 @@ def valueChangedOffset(sb):
     functions.CHIMERA_updateDACvalues1(xem)
 def ZeroCur():
     g.SETUP_pAoffset = g.SETUP_pAoffset - g.currentIDC*1E-9
-    ui.ZeroCurrentValue.setText('Current Offset = {:.3e}'.format(g.SETUP_pAoffset))
+    ui.ZeroCurrentValue.setText(AmpForm.format_data(g.SETUP_pAoffset))
     g.RestartBuffer=1
 def ResetBuffer():
     print("Buffer is resetting...")
@@ -190,6 +193,7 @@ def saveConfig():
 def QCloseEvent(w):
     saveConfig()
     print('Application closed, config saved...')
+    exit(app.exec_())
 def ExpTextChange():
     sb=ui.ExperimentName.text()
     g.experimentName = sb
@@ -217,7 +221,7 @@ def IVExecute():
         SaveDataChecked()
     ui.AppliedVoltage.display(g.newbiasvalue)
     functions.CHIMERA_updateDACvalues1(xem)
-    ResetBuffer()
+    #ResetBuffer()
     g.IVExecuteCounter+=1
     print(("Voltage applied: %s Volts" % str(g.newbiasvalue)))
     if g.IVExecuteCounter == len(g.AllVoltages):
