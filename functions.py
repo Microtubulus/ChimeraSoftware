@@ -182,7 +182,7 @@ def PlotValues(cutoff):
     if cutoff==0:
         g.displaybuffer = si.resample(readvalues, int(1/g.displaysubsample*len(readvalues)))
     else:
-        downsampled = si.resample(readvalues, 1/g.displaysubsample*len(readvalues))
+        downsampled = si.resample(readvalues, int(1/g.displaysubsample*len(readvalues)))
         effsamplerate=(g.ADCSAMPLERATE/g.displaysubsample)
         Wn = round(2*cutoff/effsamplerate, 4)
         b, a = si.bessel(4, Wn, btype='low', analog=False)
@@ -415,7 +415,7 @@ def recursive_low_pass(RawSignal,StartCoeff,EndCoeff,FilterCoeff):
 
 def MakeAllVoltagesForIV(stepV, maxV):
     import numpy as np
-    NumberOfElements=(2*maxV)/stepV+2
+    NumberOfElements=int((2*maxV)/stepV+2)
     AllVoltages=np.zeros(NumberOfElements)
     Counter=1
     for i in range(1, int(NumberOfElements)-1):

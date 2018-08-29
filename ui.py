@@ -19,6 +19,7 @@ from tables import *
 import tables
 from scipy import io
 from scipy import signal as si
+import platform
 
 #   Draw UI
 app = QtGui.QApplication(sys.argv)
@@ -43,7 +44,12 @@ ui.LowPassValue.setMaximum(((g.ADCSAMPLERATE/g.displaysubsample)/2)/1e3-1)
 ui.LowPassValue.setMinimum(1)
 ui.DisplayDownSamplingRate.setValue(g.displaysubsample)
 ui.MakeIV.setStyleSheet('QPushButton {background-color: green; color: black;}')
-g.DataFolder=os.path.join(os.getcwd(), 'Data')
+
+if (platform.system() == "Windows") and os.path.isdir('C:\ChimeraData'):
+    g.DataFolder = 'C:\ChimeraData'
+else:
+    g.DataFolder = os.path.join(os.getcwd(), 'Data')
+
 ui.DataFolder.setText(g.DataFolder)
 ui.MinDwellTimeED.setMinimum(1/(g.ADCSAMPLERATE/g.displaysubsample) * 1e6)
 
@@ -62,6 +68,7 @@ def ChangeVoltageValue(sb):
     g.newbiasvalue = sb
     g.RestartBuffer=1
     functions.CHIMERA_updateDACvalues1(xem)
+
 def updateBW():
         out = functions.CHIMERA_bandwidthtimer(xem)
         text1 = "Time\n{0}\nUSB Read Rate\n{1:} kHz\nUSB Write Rate\n{2}".format(out['text_time'],out['USB_readrate'], out['USB_writerate'])
